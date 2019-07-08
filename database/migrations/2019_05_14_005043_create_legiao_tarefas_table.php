@@ -18,7 +18,8 @@ class CreateLegiaoTarefasTable extends Migration
             $table->string('slug');	
             $table->string('tipo', 64);	
             $table->integer('codigo' )->nullable();	
-            $table->tinyInteger('cnie')->nullable();		
+            $table->tinyInteger('cnie')->nullable();
+            $table->tinyInteger('lux');		
             $table->text('descricao');
             $table->timestamps();
         });

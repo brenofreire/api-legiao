@@ -16,10 +16,12 @@ class CreateUsuariosTemporariosTable extends Migration
         Schema::create('usuarios_temporarios', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('CID')->unique();
-            $table->char('email', 128)->unique();
-            $table->char('senha', 128);
+            $table->string('nome');
+            $table->string('email', 128)->unique();
+            $table->string('senha', 128);
             $table->integer('capitulo');
             $table->enum('role', [0,1,2,3,4,5,6,7,8]);
+            $table->tinyInteger('status');
             $table->timestamps();
         });
     }

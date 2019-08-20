@@ -15,13 +15,17 @@ class CreateLegiaoTarefasTable extends Migration
     {
         Schema::create('legiao_tarefas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('slug');	
-            $table->string('tipo', 64);	
-            $table->integer('codigo' )->nullable();	
-            $table->tinyInteger('cnie')->nullable();
-            $table->tinyInteger('lux');		
-            $table->text('descricao');
-            $table->timestamps();
+
+            $table->string('slug')->unique();	
+            $table->string('nome');	
+            $table->mediumInteger('tipo')->unsigned();	
+            $table->enum('cnie', [0,1])->nullable();
+            $table->enum('lux', [0,1])->nullable();		
+            $table->text('descricao')->nullable();
+            
+            $table->tinyInteger('status'); 
+
+            $table->index(['tipo']);
         });
     }
 

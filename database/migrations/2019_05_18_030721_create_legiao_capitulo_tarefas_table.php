@@ -15,18 +15,21 @@ class CreateLegiaoCapituloTarefasTable extends Migration
     {
         Schema::create('legiao_capitulo_tarefas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nome', 64);
-            $table->string('slug');
-            $table->tinyInteger('pontuacao');
+
+            $table->string('nome');
+            $table->string('slug')->unique();
+            $table->mediumInteger('pontuacao');
             $table->text('descricao')->nullable();
-            $table->tinyInteger('tipo')->unsigned();
-            $table->tinyInteger('codigo');
+            $table->mediumInteger('tipo')->unsigned();
             $table->enum('cnie', [0,1])->nullable();
-            $table->tinyInteger('lux', [0,1])->nullable();
-            $table->tinyInteger('status', [0,1])->nullable();
+            $table->enum('lux', [0,1])->nullable();
+            $table->mediumInteger('capitulo')->unsigned();
             $table->timestamp('prazo_final');
+
+            $table->tinyInteger('status'); 
             $table->timestamps();
 
+            $table->index(['capitulo', 'slug', 'tipo']);
             $table->foreign('tipo')->references('tipo')->on('legiao_tarefas');
         });
     }

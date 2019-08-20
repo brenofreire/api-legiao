@@ -15,19 +15,21 @@ class CreateUsuariosTable extends Migration
     {
         Schema::create('usuarios', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('CID')->unique();
+
+            $table->unsignedBigInteger('cid')->unique();
             $table->string('nome');
-            $table->string('email', 128)->unique();
-            $table->string('senha', 128);
-            $table->enum('role', [0,1,2,3,4,5,6,7,8])->default(0);
-            $table->tinyInteger('status');
+            $table->string('email')->unique();
+            $table->string('senha');
+            $table->enum('role', [0,1,2,3,4,5,6,7,8])->default(1);
+            $table->tinyInteger('capitulo');
+
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
+
+            $table->index(['capitulo']);
         });
     }
 
-    /**
-     * ini, gdm, ofi, dir, mc/cc, mcr/oe, mce/gce, mcn/sc
-     */
     public function down()
     {
         Schema::dropIfExists('usuarios');

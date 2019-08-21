@@ -18,7 +18,7 @@ class CreateLegiaoAssinantesTarefasTable extends Migration
 
             $table->mediumInteger('atividade')->unsigned(); 
             $table->mediumInteger('pontuacao');
-            $table->unsignedBigInteger('cid')->unsigned()->unique(); 
+            $table->unsignedBigInteger('cid')->unsigned(); 
             $table->mediumInteger('capitulo'); 
             $table->tinyInteger('role'); 
             $table->tinyInteger('done'); 

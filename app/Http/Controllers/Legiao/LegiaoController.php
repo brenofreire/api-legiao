@@ -16,7 +16,8 @@ class LegiaoController extends Controller
     {
         $atividades = LegiaoCapituloTarefas::where([
             ['capitulo', '=', $request->get('capitulo')],
-            ['status', '=', 1]
+            ['status', '=', 1],
+            ['lux', '=', '0'],
         ])->get();
         if (count($atividades))
             return response()->json([
@@ -44,9 +45,12 @@ class LegiaoController extends Controller
             'error' => 'Erro ao criar atividade, tente novamente mais tarde!',
         ], 400);
     }
-    public function get_usuarios_legiao()
+    public function get_usuarios_legiao(Request $request)
     {
-        $usuarios_assinados = LegiaoAssinantesTarefas::select('cid')->where('status', 1)->get();
+        $usuarios_assinados = LegiaoAssinantesTarefas::select('cid')->where([
+            ['status', '=', 1],
+            ['atividade', '=', $request->get('atividade')],
+        ])->get();
         $cids = [];
         foreach ($usuarios_assinados as $value) $cids[] = $value['cid'];
         if (isset($usuarios_assinados))
@@ -80,11 +84,37 @@ class LegiaoController extends Controller
             ]);
         // se tiver usuário cadastrado e ele tiver status 1 e ação for de apagar, ele apaga
         elseif ($usuario_cadastrado == 1 && $dados['acao'] == 0)
-            return LegiaoAssinantesTarefas::where('cid', '=', $dados['usuario'])->update(['status' => 0]);
+            return LegiaoAssinantesTarefas::where([
+                ['cid', '=', $dados['usuario']],
+                ['atividade', '=', $dados['atividade']]
+            ])->update(['status' => 0]);
         // se tiver usuário cadastrado e ele tiver status 0 e ação for de adicionar, ele adiciona
         elseif ($usuario_cadastrado == 1 && $dados['acao'] == 1)
-            return LegiaoAssinantesTarefas::where('cid', '=', $dados['usuario'])->update(['status' => 1]);
+            return LegiaoAssinantesTarefas::where([
+                ['cid', '=', $dados['usuario']],
+                ['atividade', '=', $dados['atividade']]
+            ])->update(['status' => 1]);
 
         return response(null, 400);
+    }
+    public function ranking_capitulo(Request $request)
+    {
+        return LegiaoAssinantesTarefas::selectRaw('cid, sum(pontuacao) as pontuacao_soma')->where([
+            ['capitulo', '=', $request->get('capitulo')],
+            ['status', '=', 1]
+        ])->with('demolay')->groupBy('cid')->orderBy('pontuacao_soma', 'DESC')->get();
+    }
+    public function get_atividades_lux(Request $request)
+    {
+        $atividades = LegiaoCapituloTarefas::where([
+            ['capitulo', '=', $request->get('capitulo')],
+            ['status', '=', 1],
+            ['lux', '=', '1'],
+        ])->get();
+        if (count($atividades))
+            return response()->json([
+                'atividades' => $atividades
+            ]);
+        return response(null, 204);
     }
 }

@@ -10,4 +10,5 @@ class Usuarios extends Model
     protected $fillable = [
         'cid', 'nome', 'email', 'senha', 'role', 'status', 'capitulo'
     ];
+    protected $hidden = ['senha'];
 }

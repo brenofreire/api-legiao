@@ -12,18 +12,18 @@
 */
 
 Route::group(['namespace' => 'Conta', 'prefix' => 'conta'], function (){
-    Route::post('cadastrar', 'ContaController@cadastrar');
-    Route::post('logar', 'ContaController@logar');
-    Route::get('verificar_status/{CID}', 'ContaController@verificar_status');
-    Route::get('get_usuarios_temporarios', 'ContaController@get_usuarios_temporarios');
-    Route::post('modificar_usuario_temporario', 'ContaController@modificar_usuario_temporario');
+    Route::post('cadastrar', 'ContaController@cadastrar'); # OK
+    Route::post('logar', 'ContaController@logar'); # OK
+    Route::get('verificar_status/{CID}', 'ContaController@verificar_status'); # OK
+    Route::get('get_usuarios_temporarios', 'ContaController@get_usuarios_temporarios'); # OK
+    Route::post('modificar_usuario_temporario', 'ContaController@modificar_usuario_temporario'); # OK
 });
 Route::group(['namespace' => 'Legiao', 'prefix' => 'legiao'], function (){
-    Route::get('get_usuarios_legiao', 'LegiaoController@get_usuarios_legiao');
-    Route::post('cadastrar_tarefa', 'LegiaoController@cadastrar_tarefa');
-    Route::get('get_tipos_tarefa', 'LegiaoController@get_tipos_tarefa');
-    Route::get('get_atividades_legiao', 'LegiaoController@get_atividades_legiao');
+    Route::get('get_usuarios_legiao', 'LegiaoController@get_usuarios_legiao'); # OK
+    Route::post('cadastrar_tarefa', 'LegiaoController@cadastrar_tarefa'); # OK
+    Route::get('get_tipos_tarefa', 'LegiaoController@get_tipos_tarefa'); # OK
+    Route::get('get_atividades_legiao', 'LegiaoController@get_atividades_legiao'); # OK
     Route::get('get_atividades_lux', 'LegiaoController@get_atividades_lux');
-    Route::post('registrar_participante', 'LegiaoController@registrar_participante');
-    Route::post('ranking_capitulo', 'LegiaoController@ranking_capitulo');
+    Route::post('registrar_participante', 'LegiaoController@registrar_participante'); # OK
+    Route::get('ranking_capitulo', 'LegiaoController@ranking_capitulo'); #OK
 });

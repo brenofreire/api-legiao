@@ -84,10 +84,17 @@ class legiao_tarefas extends Seeder
                 'lux'        => '0',
                 'descricao'  => 'Ano DeMolay',
                 'status'     => 1,
+            ],
+            [
+                'nome'       => 'Outros',
+                'slug'       => 'outros',
+                'tipo'       => 9,
+                'descricao'  => 'Atividade geral',
+                'status'     => 1,
             ]
         ];
         foreach ($atividades as $atividade) {
-            @LegiaoTarefas::create([
+            @LegiaoTarefas::updateOrCreate([
                 'nome'       => $atividade['nome'],
                 'slug'       => $atividade['slug'],
                 'tipo'       => $atividade['tipo'],

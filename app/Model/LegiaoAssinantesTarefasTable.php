@@ -10,4 +10,7 @@ class LegiaoAssinantesTarefasTable extends Model
     protected $fillable = [
         'atividade', 'pontuacao', 'cid', 'capitulo', 'role', 'done', 'status'
     ];
+    public function demolay(){
+        return $this->hasOne('App\Model\Usuarios','cid', 'cid');
+    }
 }

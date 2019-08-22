@@ -35,6 +35,7 @@ class LegiaoController extends Controller
     public function cadastrar_tarefa(Request $request)
     {
         $atividade = $request->all();
+        $atividade['prazo_final'] = Date('Y-m-d H:i:s');
         $criar_atividade = LegiaoCapituloTarefas::create($atividade);
         if ($criar_atividade) return response()->json([
             'ok'        => true,

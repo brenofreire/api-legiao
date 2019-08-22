@@ -30,7 +30,7 @@ class CreateLegiaoCapituloTarefasTable extends Migration
             $table->timestamps();
 
             $table->index(['capitulo', 'slug', 'tipo']);
-            $table->foreign('tipo')->references('tipo')->on('legiao_tarefas');
+            // $table->foreign('tipo')->references('tipo')->on('legiao_tarefas');
         });
     }
     /**

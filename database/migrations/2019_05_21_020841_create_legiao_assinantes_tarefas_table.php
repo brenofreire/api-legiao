@@ -27,7 +27,7 @@ class CreateLegiaoAssinantesTarefasTable extends Migration
             $table->timestamps();
 
             $table->index(['capitulo', 'atividade', 'cid']);
-            $table->foreign('cid')->references('cid')->on('usuarios');
+            // $table->foreign('cid')->references('cid')->on('usuarios');
         });
     }
 

@@ -82,12 +82,12 @@ class ContaController extends Controller
                     DB::raw('                    
                         CASE 
                             WHEN SUM(pontuacao) > 50 THEN "Cobre" 
-                            WHEN SUM(pontuacao) > 50 AND SUM(pontuacao) < 100 THEN "Bronze" 
-                            WHEN SUM(pontuacao) > 100 AND SUM(pontuacao) < 250 THEN "Prata" 
-                            WHEN SUM(pontuacao) > 250 AND SUM(pontuacao) < 500 THEN "Ouro" 
-                            WHEN SUM(pontuacao) > 500 AND SUM(pontuacao) < 800 THEN "Diamante" 
-                            WHEN SUM(pontuacao) > 800 THEN "Platina" 
-                        END AS elo,
+                            WHEN SUM(pontuacao) > 50 AND SUM(pontuacao) < 100 THEN 1
+                            WHEN SUM(pontuacao) > 100 AND SUM(pontuacao) < 250 THEN 2
+                            WHEN SUM(pontuacao) > 250 AND SUM(pontuacao) < 500 THEN 2
+                            WHEN SUM(pontuacao) > 500 AND SUM(pontuacao) < 800 THEN 4
+                            WHEN SUM(pontuacao) > 800 THEN 5
+                        END AS elo,  
                     SUM(pontuacao) as pontuacao_soma,cid
                 '))->where([
                         ['status', '=', 1]

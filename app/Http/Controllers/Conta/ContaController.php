@@ -80,7 +80,6 @@ class ContaController extends Controller
             ])->with(['pontuacao' => function ($query) {
                 $query->select(
                     DB::raw('                    
-                    (
                         CASE 
                             WHEN SUM(pontuacao) BETWEEN 0 AND 50 THEN "Cobre" 
                             WHEN SUM(pontuacao) BETWEEN 51 AND 100 THEN "Bronze" 
@@ -88,8 +87,7 @@ class ContaController extends Controller
                             WHEN SUM(pontuacao) BETWEEN 251 AND 500 THEN "Ouro" 
                             WHEN SUM(pontuacao) BETWEEN 501 AND 800 THEN "Diamante" 
                             WHEN SUM(pontuacao) > 801 THEN "Platina" 
-                        END 
-                    ) AS elo,
+                        END AS elo,
                     SUM(pontuacao) as pontuacao_soma,cid
                 '))->where([
                         ['status', '=', 1]

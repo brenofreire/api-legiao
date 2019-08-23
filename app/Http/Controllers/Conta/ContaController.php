@@ -79,21 +79,21 @@ class ContaController extends Controller
                 ['senha', '=', $dados['senha']],
             ])->with(['pontuacao' => function ($query) {
                 $query->select(
-                    DB::raw('                    
-                        CASE 
-                            WHEN SUM(pontuacao) > 50 THEN 0
-                            WHEN SUM(pontuacao) > 50 AND SUM(pontuacao) < 100 THEN 1
-                            WHEN SUM(pontuacao) > 100 AND SUM(pontuacao) < 250 THEN 2
-                            WHEN SUM(pontuacao) > 250 AND SUM(pontuacao) < 500 THEN 2
-                            WHEN SUM(pontuacao) > 500 AND SUM(pontuacao) < 800 THEN 4
-                            WHEN SUM(pontuacao) > 800 THEN 5
-                        END AS elo,  
-                    SUM(pontuacao) as pontuacao_soma,cid
+                    DB::raw('SUM(pontuacao) as pontuacao_soma,cid
                 '))->where([
-                        ['status', '=', 1]
+                    ['status', '=', 1]
                 ]);
-            }])->get();
-            if (count($usuario) == 1) {
+            }])->first();
+            if (isset($usuario)) {
+                $elo = (int)$usuario['pontuacao']['pontuacao_soma'];
+                unset($usuario['pontuacao']);
+                $usuario['pontuacao'] = $elo;
+                if($elo < 50) $usuario['elo'] = 'Cobre';
+                if(($elo > 50) && ($elo < 100) ) $usuario['elo'] = 'Bronze';
+                if(($elo > 100) && ($elo < 250) ) $usuario['elo'] = 'Prata';
+                if(($elo > 250) && ($elo < 500) ) $usuario['elo'] = 'Ouro';
+                if(($elo > 500) && ($elo < 800) ) $usuario['elo'] = 'Diamante';
+                if($elo > 800) $usuario['elo'] = 'Platina';
                 return response()->json([
                     'mensagem' => 'Usuário logado com sucesso!',
                     'usuario'  => $usuario

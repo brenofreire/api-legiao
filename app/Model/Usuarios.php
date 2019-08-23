@@ -11,4 +11,7 @@ class Usuarios extends Model
         'cid', 'nome', 'email', 'senha', 'role', 'status', 'capitulo'
     ];
     protected $hidden = ['senha'];
+    public function pontuacao(){
+        return $this->hasOne('App\Model\LegiaoAssinantesTarefasTable', 'cid', 'cid');
+    }
 }

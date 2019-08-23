@@ -23,7 +23,7 @@ Route::group(['namespace' => 'Legiao', 'prefix' => 'legiao'], function (){
     Route::post('cadastrar_tarefa', 'LegiaoController@cadastrar_tarefa'); # OK
     Route::get('get_tipos_tarefa', 'LegiaoController@get_tipos_tarefa'); # OK
     Route::get('get_atividades_legiao', 'LegiaoController@get_atividades_legiao'); # OK
-    Route::get('get_atividades_lux', 'LegiaoController@get_atividades_lux');
+    Route::get('get_atividades_lux', 'LegiaoController@get_atividades_lux'); # OK
     Route::post('registrar_participante', 'LegiaoController@registrar_participante'); # OK
     Route::get('ranking_capitulo', 'LegiaoController@ranking_capitulo'); #OK
 });

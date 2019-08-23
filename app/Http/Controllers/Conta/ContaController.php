@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Validator;
 use App\Model\UsuariosTemporarios;
 use App\Model\Usuarios;
+use DB;
 
 class ContaController extends Controller
 {
@@ -76,11 +77,28 @@ class ContaController extends Controller
             $usuario = Usuarios::where([
                 ['cid', '=', $dados['cid']],
                 ['senha', '=', $dados['senha']],
-            ])->get();
+            ])->with(['pontuacao' => function ($query) {
+                $query->select(
+                    DB::raw('                    
+                    (
+                        CASE 
+                            WHEN SUM(pontuacao) BETWEEN 0 AND 50 THEN "Cobre" 
+                            WHEN SUM(pontuacao) BETWEEN 51 AND 100 THEN "Bronze" 
+                            WHEN SUM(pontuacao) BETWEEN 101 AND 250 THEN "Prata" 
+                            WHEN SUM(pontuacao) BETWEEN 251 AND 500 THEN "Ouro" 
+                            WHEN SUM(pontuacao) BETWEEN 501 AND 800 THEN "Diamante" 
+                            WHEN SUM(pontuacao) > 801 THEN "Platina" 
+                        END 
+                    ) AS elo,
+                    SUM(pontuacao) as pontuacao_soma,cid
+                '))->where([
+                        ['status', '=', 1]
+                ]);
+            }])->get();
             if (count($usuario) == 1) {
                 return response()->json([
                     'mensagem' => 'Usuário logado com sucesso!',
-                    'usuario' => $usuario
+                    'usuario'  => $usuario
                 ], 200);
             } else {
                 return response()->json([

@@ -82,7 +82,7 @@ class ContaController extends Controller
                     DB::raw('SUM(pontuacao) as pontuacao_soma,cid
                 '))->where([
                     ['status', '=', 1]
-                ]);
+                ])->groupBy('cid');
             }])->first();
             if (isset($usuario)) {
                 $elo = (int)$usuario['pontuacao']['pontuacao_soma'];

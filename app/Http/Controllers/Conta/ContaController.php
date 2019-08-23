@@ -81,7 +81,7 @@ class ContaController extends Controller
                 $query->select(
                     DB::raw('                    
                         CASE 
-                            WHEN SUM(pontuacao) > 50 THEN "Cobre" 
+                            WHEN SUM(pontuacao) > 50 THEN 0
                             WHEN SUM(pontuacao) > 50 AND SUM(pontuacao) < 100 THEN 1
                             WHEN SUM(pontuacao) > 100 AND SUM(pontuacao) < 250 THEN 2
                             WHEN SUM(pontuacao) > 250 AND SUM(pontuacao) < 500 THEN 2

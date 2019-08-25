@@ -1,22 +1,13 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::group(['namespace' => 'Conta', 'prefix' => 'conta'], function (){
     Route::post('cadastrar', 'ContaController@cadastrar'); # OK
     Route::post('logar', 'ContaController@logar'); # OK
     Route::get('verificar_status/{CID}', 'ContaController@verificar_status'); # OK
     Route::get('get_usuarios_temporarios', 'ContaController@get_usuarios_temporarios'); # OK
     Route::post('modificar_usuario_temporario', 'ContaController@modificar_usuario_temporario'); # OK
+    Route::post('get_perfil', 'ContaController@get_perfil'); # OK
+    Route::get('get_usuarios_geral', 'ContaController@get_usuarios_geral'); # OK
 });
 Route::group(['namespace' => 'Legiao', 'prefix' => 'legiao'], function (){
     Route::get('get_usuarios_legiao', 'LegiaoController@get_usuarios_legiao'); # OK

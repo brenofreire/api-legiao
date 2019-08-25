@@ -12,6 +12,14 @@ use App\Model\Usuarios;
 
 class LegiaoController extends Controller
 {
+    public function __constructor(Request $request)
+    {
+        $header = $request->header('Authorization');
+        if ($header !== 'api-legiao-123123123') {
+            return response('você não tem permissão para acessar essa página.', 401);
+        }
+    }
+
     public function get_atividades_legiao(Request $request)
     {
         $atividades = LegiaoCapituloTarefas::where([
@@ -100,10 +108,20 @@ class LegiaoController extends Controller
     }
     public function ranking_capitulo(Request $request)
     {
-        return LegiaoAssinantesTarefas::selectRaw('cid, sum(pontuacao) as pontuacao_soma')->where([
+        $ranking = LegiaoAssinantesTarefas::selectRaw('cid, sum(pontuacao) as pontuacao_soma')->where([
             ['capitulo', '=', $request->get('capitulo')],
             ['status', '=', 1]
         ])->with('demolay')->groupBy('cid')->orderBy('pontuacao_soma', 'DESC')->get();
+        foreach ($ranking as $usuario) {
+            $elo = (int) $usuario['pontuacao_soma'];
+            if ($elo < 50) $usuario['elo'] = 'Cobre';
+            if (($elo >= 50) && ($elo < 100)) $usuario['elo'] = 'Bronze';
+            if (($elo >= 100) && ($elo < 250)) $usuario['elo'] = 'Prata';
+            if (($elo >= 250) && ($elo < 500)) $usuario['elo'] = 'Ouro';
+            if (($elo >= 500) && ($elo < 800)) $usuario['elo'] = 'Diamante';
+            if ($elo >= 800) $usuario['elo'] = 'Platina';
+        }
+        return $ranking;
     }
     public function get_atividades_lux(Request $request)
     {

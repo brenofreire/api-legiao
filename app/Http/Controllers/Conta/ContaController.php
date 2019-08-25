@@ -171,4 +171,39 @@ class ContaController extends Controller
         if (!$alterar_usuario_temproario)
             return response('Houve um erro ao alterar situação do usuário', 400);
     }
+    public function get_perfil (Request $request){
+        $dados = $request->all();
+        $usuario = Usuarios::where([
+            ['cid', '=', $dados['cid']],
+        ])->with(['pontuacao' => function ($query) {
+            $query->select(
+                DB::raw('SUM(pontuacao) as pontuacao_soma,cid
+            '))->where([
+                ['status', '=', 1]
+            ])->groupBy('cid');
+        }])->first();
+        if (isset($usuario)) {
+            $elo = (int)$usuario['pontuacao']['pontuacao_soma'];
+            unset($usuario['pontuacao']);
+            $usuario['pontuacao'] = $elo;
+            if($elo < 50) $usuario['elo'] = 'Cobre';
+            elseif(($elo >= 50) && ($elo < 100)) $usuario['elo'] = 'Bronze';
+            elseif(($elo >= 100) && ($elo < 250)) $usuario['elo'] = 'Prata';
+            elseif(($elo >= 250) && ($elo < 500)) $usuario['elo'] = 'Ouro';
+            elseif(($elo >= 500) && ($elo < 800)) $usuario['elo'] = 'Diamante';
+            elseif($elo >= 800) $usuario['elo'] = 'Platina';
+            
+            return $usuario;
+        } else {
+            return response()->json([
+                'error' => 'Usuário ou senha inválidos!',
+            ], 400);
+        }
+    }
+    public function get_usuarios_geral(Request $request){
+        return Usuarios::where('capitulo', '=', $request->get('capitulo'))->where( function ($query) use ($request) {
+            $query->where('nome', 'LIKE', $request->get('buscaValor'))
+            ->orWhere('cid', 'LIKE', '%'. $request->get('buscaValor') .'%');
+        })->get();
+    }
 }

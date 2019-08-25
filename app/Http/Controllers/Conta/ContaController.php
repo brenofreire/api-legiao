@@ -204,8 +204,7 @@ class ContaController extends Controller
         $buscaValor = $request->get('buscaValor');
         if($request->get('buscaValor') == null) $buscaValor = '';
         return Usuarios::where('capitulo', '=', $request->get('capitulo'))->where( function ($query) use ($request, $buscaValor) {
-            $query->where('nome', 'like', $buscaValor)
-            ->orWhere('cid', 'like', '%'. $request->get('buscaValor') .'%');
+            $query->where('nome', 'like', $buscaValor);
         })->get();
     }
 }

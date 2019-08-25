@@ -201,8 +201,10 @@ class ContaController extends Controller
         }
     }
     public function get_usuarios_geral(Request $request){
-        return Usuarios::where('capitulo', '=', $request->get('capitulo'))->where( function ($query) use ($request) {
-            $query->where('nome', 'like', $request->get('buscaValor'))
+        $buscaValor = $request->get('buscaValor');
+        if($request->get('buscaValor') == null) $buscaValor = '';
+        return Usuarios::where('capitulo', '=', $request->get('capitulo'))->where( function ($query) use ($request, $buscaValor) {
+            $query->where('nome', 'like', $buscaValor)
             ->orWhere('cid', 'like', '%'. $request->get('buscaValor') .'%');
         })->get();
     }

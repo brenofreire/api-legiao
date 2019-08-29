@@ -8,6 +8,7 @@ Route::group(['namespace' => 'Conta', 'prefix' => 'conta'], function (){
     Route::post('modificar_usuario_temporario', 'ContaController@modificar_usuario_temporario'); # OK
     Route::post('get_perfil', 'ContaController@get_perfil'); # OK
     Route::get('get_usuarios_geral', 'ContaController@get_usuarios_geral'); # OK
+    Route::post('modificar_usuario', 'ContaController@modificar_usuario'); # OK
 });
 Route::group(['namespace' => 'Legiao', 'prefix' => 'legiao'], function (){
     Route::get('get_usuarios_legiao', 'LegiaoController@get_usuarios_legiao'); # OK

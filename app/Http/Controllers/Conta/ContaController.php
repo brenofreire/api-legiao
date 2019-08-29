@@ -77,6 +77,7 @@ class ContaController extends Controller
             $usuario = Usuarios::where([
                 ['cid', '=', $dados['cid']],
                 ['senha', '=', $dados['senha']],
+                ['status', '=', 1]
             ])->with(['pontuacao' => function ($query) {
                 $query->select(
                     DB::raw('SUM(pontuacao) as pontuacao_soma,cid
@@ -201,10 +202,21 @@ class ContaController extends Controller
         }
     }
     public function get_usuarios_geral(Request $request){
-        $buscaValor = $request->get('buscaValor');
-        if($request->get('buscaValor') == null) $buscaValor = '';
-        return Usuarios::where('capitulo', '=', $request->get('capitulo'))->where( function ($query) use ($request, $buscaValor) {
-            $query->where('nome', 'like', $buscaValor);
-        })->get();
+        $buscaValor = $request->get('buscaValor') == null ? $buscaValor = '' : $request->get('buscaValor');
+        return Usuarios::where([
+            ['capitulo', '=', $request->get('capitulo')],
+            ['nome', 'like', '%'. $buscaValor . '%']
+        ])->get();
+    }
+    public function modificar_usuario(Request $request){
+        $dados = $request->all();
+        // return $dados;
+        $update = Usuarios::where('cid',  $dados['cid'])->update([
+            'capitulo' => $dados['capitulo'],
+            'role'     => (int) $dados['role'],
+            'status'   => $dados['status'],
+        ]);
+        if($update) return $update;
+        else return response(null, 400);
     }
 }

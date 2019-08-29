@@ -23,7 +23,7 @@ class CreateLegiaoCapituloTarefasTable extends Migration
             $table->mediumInteger('tipo')->unsigned();
             $table->enum('cnie', [0,1])->nullable();
             $table->enum('lux', [0,1])->nullable();
-            $table->mediumInteger('capitulo')->unsigned();
+            $table->unsignedBigInteger('capitulo');
             $table->timestamp('prazo_final');
 
             $table->tinyInteger('status'); 
@@ -31,6 +31,9 @@ class CreateLegiaoCapituloTarefasTable extends Migration
 
             $table->index(['capitulo', 'slug', 'tipo']);
             // $table->foreign('tipo')->references('tipo')->on('legiao_tarefas');
+        });
+        Schema::table('legiao_capitulo_tarefas', function (){
+            DB::statement('ALTER TABLE legiao_capitulo_tarefas ADD CONSTRAINT foreign_tipo_tarefas FOREIGN KEY (tipo) REFERENCES legiao_tarefas (tipo)');
         });
     }
     /**

@@ -20,8 +20,8 @@ class CreateUsuariosTemporariosTable extends Migration
             $table->string('nome');
             $table->string('email')->unique();
             $table->string('senha');
-            $table->mediumInteger('capitulo');
-            $table->enum('role', [0,1,2,3,4,5,6,7,8])->default(1);
+            $table->unsignedBigInteger('capitulo');
+            $table->enum('role', [1,2,3,4,5,6,7,8])->default(1);
             
             $table->tinyInteger('status');
             $table->timestamps();

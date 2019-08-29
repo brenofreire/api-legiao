@@ -19,7 +19,7 @@ class CreateLegiaoAssinantesTarefasTable extends Migration
             $table->mediumInteger('atividade')->unsigned(); 
             $table->mediumInteger('pontuacao');
             $table->unsignedBigInteger('cid')->unsigned(); 
-            $table->mediumInteger('capitulo'); 
+            $table->unsignedBigInteger('capitulo'); 
             $table->tinyInteger('role'); 
             $table->tinyInteger('done'); 
 
@@ -28,6 +28,9 @@ class CreateLegiaoAssinantesTarefasTable extends Migration
 
             $table->index(['capitulo', 'atividade', 'cid']);
             // $table->foreign('cid')->references('cid')->on('usuarios');
+        });
+        Schema::table('legiao_assinantes_tarefas', function (){
+            DB::statement('ALTER TABLE legiao_assinantes_tarefas ADD CONSTRAINT foreign_role_assinantes FOREIGN KEY (cid) REFERENCES usuarios (cid)');
         });
     }
 

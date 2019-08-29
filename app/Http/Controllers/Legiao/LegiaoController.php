@@ -63,10 +63,25 @@ class LegiaoController extends Controller
         $cids = [];
         foreach ($usuarios_assinados as $value) $cids[] = $value['cid'];
         if (isset($usuarios_assinados))
-            $usuarios = Usuarios::whereNotIn('cid', $cids)->where('status', 1)->get();
-        else
-            $usuarios = Usuarios::get();
-        $usuarios_assinados = Usuarios::whereIn('cid', $cids)->where('status', 1)->get();
+            $usuarios = Usuarios::whereNotIn('cid', $cids)->with(
+                ['pontuacao' => function ($query) {
+                    $query->select(DB::raw('SUM(pontuacao) as pontuacao_soma, cid'))->pluck('pontuacao_soma');
+                }]
+            )->where('status', 1)->get();
+        else $usuarios = Usuarios::get();
+
+        $usuarios_assinados = Usuarios::whereIn('cid', $cids)->with(
+            ['pontuacao' => function ($query) {
+                $query->select(DB::raw('SUM(pontuacao) as pontuacao_soma, cid'))->pluck('pontuacao_soma');
+            }]
+        )->where('status', 1)->get();
+
+        foreach ($usuarios_assinados as $usuario) {
+            $soma = $usuario['pontuacao']['pontuacao_soma']; unset($usuario['pontuacao']);
+            $usuario['pontuacao'] = $soma;
+            $usuario['elo'] = $this->getElo($soma);
+        }
+
         return response()->json([
             'usuarios'         => $usuarios,
             'usuarios_remover' => $usuarios_assinados
@@ -112,15 +127,7 @@ class LegiaoController extends Controller
             ['capitulo', '=', $request->get('capitulo')],
             ['status', '=', 1]
         ])->with('demolay')->groupBy('cid')->orderBy('pontuacao_soma', 'DESC')->get();
-        foreach ($ranking as $usuario) {
-            $elo = (int) $usuario['pontuacao_soma'];
-            if ($elo < 50) $usuario['elo'] = 'Cobre';
-            if (($elo >= 50) && ($elo < 100)) $usuario['elo'] = 'Bronze';
-            if (($elo >= 100) && ($elo < 250)) $usuario['elo'] = 'Prata';
-            if (($elo >= 250) && ($elo < 500)) $usuario['elo'] = 'Ouro';
-            if (($elo >= 500) && ($elo < 800)) $usuario['elo'] = 'Diamante';
-            if ($elo >= 800) $usuario['elo'] = 'Platina';
-        }
+        foreach ($ranking as $usuario) $elo = $this->getElo((int) $usuario['pontuacao_soma']);
         return $ranking;
     }
     public function get_atividades_lux(Request $request)
@@ -135,5 +142,15 @@ class LegiaoController extends Controller
                 'atividades' => $atividades
             ]);
         return response(null, 204);
+    }
+    public function getElo($elo)
+    {
+        if ($elo < 50) return 'Cobre';
+        elseif (($elo >= 50) && ($elo < 100)) return 'Bronze';
+        elseif (($elo >= 100) && ($elo < 250)) return 'Prata';
+        elseif (($elo >= 250) && ($elo < 500)) return 'Ouro';
+        elseif (($elo >= 500) && ($elo < 800)) return 'Diamante';
+        elseif ($elo >= 800) return 'Platina';
+        else return 'Cobre';
     }
 }

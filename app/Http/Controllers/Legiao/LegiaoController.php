@@ -65,16 +65,16 @@ class LegiaoController extends Controller
         if (isset($usuarios_assinados))
             $usuarios = Usuarios::whereNotIn('cid', $cids)->with(
                 ['pontuacao' => function ($query) {
-                    $query->select(DB::raw('SUM(pontuacao) as pontuacao_soma, cid'))->pluck('pontuacao_soma')->groupBy('cid');
+                    $query->select(DB::raw('SUM(pontuacao) as pontuacao_soma, cid'))->pluck('pontuacao_soma');
                 }]
-            )->where('status', 1)->get();
+            )->where('status', 1)->groupBy('cid')->get();
         else $usuarios = Usuarios::get();
 
         $usuarios_assinados = Usuarios::whereIn('cid', $cids)->with(
             ['pontuacao' => function ($query) {
-                $query->select(DB::raw('SUM(pontuacao) as pontuacao_soma, cid'))->pluck('pontuacao_soma')->groupBy('cid');
+                $query->select(DB::raw('SUM(pontuacao) as pontuacao_soma, cid'))->pluck('pontuacao_soma');
             }]
-        )->where('status', 1)->get();
+        )->where('status', 1)->groupBy('cid')->get();
 
         foreach ($usuarios_assinados as $usuario) {
             $soma = $usuario['pontuacao']['pontuacao_soma']; unset($usuario['pontuacao']);
